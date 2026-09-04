@@ -2,6 +2,7 @@
 <html lang="es">
 
 <head>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -44,15 +45,16 @@
       border-radius: 12px;
       padding: 25px;
       box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-      text-align: center;
     }
 
     .logo {
+      text-align: center;
       font-size: 50px;
       margin-bottom: 10px;
     }
 
     .sigap {
+      text-align: center;
       font-size: 28px;
       font-weight: bold;
       color: #075a9c;
@@ -61,39 +63,115 @@
     .mensaje {
       margin-top: 20px;
       line-height: 1.6;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      font-family: Arial, sans-serif;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 25px;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      background: #075a9c;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background: #888;
+      cursor: not-allowed;
+    }
+
+    .turnoConfirmacion {
+      text-align: center;
+    }
+
+    .turnoConfirmacion h2 {
+      color: #075a9c;
+    }
+
+    .numeroTurno {
+      font-size: 60px;
+      font-weight: bold;
+      color: #075a9c;
+      margin: 20px 0;
+    }
+
+    .instruccion {
+      background: #eef5fa;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
     }
 
   </style>
 
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 
-<script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  <!-- OneSignal -->
 
-  OneSignalDeferred.push(async function(OneSignal) {
+  <script
+    src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"
+    defer>
+  </script>
 
-    await OneSignal.init({
+  <script>
 
-      appId: "cba47c3a-17f3-4b19-9fd3-e2d94f4ef9f8",
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
 
-      serviceWorkerPath: "sigap-pacientes/OneSignalSDKWorker.js",
+    OneSignalDeferred.push(async function(OneSignal) {
 
-      serviceWorkerParam: {
-        scope: "/sigap-pacientes/"
-      },
+      await OneSignal.init({
 
-      notifyButton: {
-        enable: true
-      }
+        appId: "cba47c3a-17f3-4b19-9fd3-e2d94f4ef9f8",
+
+        serviceWorkerPath:
+          "sigap-pacientes/OneSignalSDKWorker.js",
+
+        serviceWorkerParam: {
+          scope: "/sigap-pacientes/"
+        },
+
+        notifyButton: {
+          enable: true
+        }
+
+      });
 
     });
 
-  });
-</script>
-  
+  </script>
+
+
 </head>
 
+
 <body>
+
 
   <div class="encabezado">
 
@@ -108,19 +186,26 @@
 
   </div>
 
+
   <div class="contenedor">
 
-    <div class="tarjeta">
 
-      <div class="logo">🩺</div>
+    <div class="tarjeta" id="contenido">
+
+
+      <div class="logo">
+        🩺
+      </div>
+
 
       <div class="sigap">
         SIGAP
       </div>
 
+
       <div class="mensaje">
 
-        <h2>Página de Pacientes</h2>
+        <h2>Registro de llegada</h2>
 
         <p>
           Sistema Inteligente de Gestión
@@ -128,16 +213,275 @@
         </p>
 
         <p>
-          Esta página será utilizada para
-          registrar su llegada y recibir
-          notificaciones cuando sea su turno.
+          Complete sus datos para registrar
+          su llegada y recibir su número de turno.
         </p>
 
       </div>
 
+
+      <!-- FORMULARIO -->
+
+      <form
+        id="formulario"
+        method="POST"
+        action="https://script.google.com/macros/s/AKfycbwcX10lhcDwcSmpPvLhy9OmE3OkFGXo6zaxIz_fmdMGGAqfcRAqc32Dnk0BecfDahqz/exec"
+        target="respuesta">
+
+        <label for="grado">
+          Grado
+        </label>
+
+        <select
+          id="grado"
+          name="grado"
+          required>
+
+          <option value="">
+            Seleccione...
+          </option>
+
+          <option>SLC</option>
+          <option>SLTP</option>
+          <option>CBD</option>
+          <option>CBO</option>
+          <option>CB2</option>
+          <option>CB1</option>
+          <option>SG2</option>
+          <option>SG1</option>
+          <option>SOF</option>
+          <option>SOM</option>
+          <option>ALF</option>
+          <option>STE</option>
+          <option>TTE</option>
+          <option>CAP</option>
+          <option>MAY</option>
+          <option>TCL</option>
+          <option>CRL</option>
+          <option>GDB</option>
+          <option>GDD</option>
+          <option>ECP</option>
+          <option>PAC</option>
+
+        </select>
+
+
+        <label for="nombre">
+          Nombre
+        </label>
+
+        <input
+          id="nombre"
+          name="nombre"
+          type="text"
+          placeholder="Ingrese su nombre"
+          required>
+
+
+        <label for="apellidos">
+          Apellidos
+        </label>
+
+        <input
+          id="apellidos"
+          name="apellidos"
+          type="text"
+          placeholder="Ingrese sus apellidos"
+          required>
+
+
+        <label for="rut">
+          RUT
+        </label>
+
+        <input
+          id="rut"
+          name="rut"
+          type="text"
+          placeholder="12.345.678-9"
+          required>
+
+
+        <label for="motivo">
+          Motivo de consulta
+        </label>
+
+        <textarea
+          id="motivo"
+          name="motivo"
+          rows="4"
+          placeholder="Describa brevemente el motivo de consulta"
+          required></textarea>
+
+
+        <button
+          id="botonRegistro"
+          type="submit">
+
+          REGISTRAR INGRESO
+
+        </button>
+
+
+      </form>
+
+
+      <!-- IFRAME OCULTO -->
+
+      <iframe
+        name="respuesta"
+        id="respuesta"
+        style="display:none;">
+      </iframe>
+
+
     </div>
 
   </div>
+
+
+  <script>
+
+    const formulario =
+      document.getElementById("formulario");
+
+    const boton =
+      document.getElementById("botonRegistro");
+
+
+    formulario.addEventListener(
+      "submit",
+      function() {
+
+        boton.disabled = true;
+
+        boton.textContent =
+          "REGISTRANDO...";
+
+      }
+    );
+
+
+    // Recibir respuesta desde Apps Script
+
+    window.addEventListener(
+      "message",
+      async function(event) {
+
+        if (
+          event.origin !==
+          "https://script.google.com"
+        ) {
+          return;
+        }
+
+
+        const respuesta = event.data;
+
+
+        if (!respuesta || !respuesta.ok) {
+
+          boton.disabled = false;
+
+          boton.textContent =
+            "REGISTRAR INGRESO";
+
+          alert(
+            respuesta &&
+            respuesta.error
+              ? respuesta.error
+              : "No fue posible registrar el ingreso."
+          );
+
+          return;
+
+        }
+
+
+        /*
+         * Vincular paciente con OneSignal
+         */
+
+        try {
+
+          OneSignalDeferred.push(
+            async function(OneSignal) {
+
+              await OneSignal.login(
+                respuesta.uid
+              );
+
+            }
+          );
+
+        } catch (error) {
+
+          console.error(
+            "Error vinculando OneSignal:",
+            error
+          );
+
+        }
+
+
+        // Mostrar número de turno
+
+        document.getElementById(
+          "contenido"
+        ).innerHTML = `
+
+          <div class="turnoConfirmacion">
+
+            <div class="logo">
+              🩺
+            </div>
+
+            <div class="sigap">
+              SIGAP
+            </div>
+
+            <h2>
+              ✅ INGRESO REGISTRADO
+            </h2>
+
+            <p>
+              Su número de turno es
+            </p>
+
+            <div class="numeroTurno">
+              ${respuesta.turno}
+            </div>
+
+            <div class="instruccion">
+
+              <strong>
+                Permanezca atento a su teléfono.
+              </strong>
+
+              <br><br>
+
+              Recibirá una notificación cuando
+              corresponda su atención.
+
+            </div>
+
+            <button
+              type="button"
+              onclick="location.reload()">
+
+              NUEVO PACIENTE
+
+            </button>
+
+          </div>
+
+        `;
+
+      }
+    );
+
+  </script>
+
 
 </body>
 
