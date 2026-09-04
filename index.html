@@ -369,12 +369,11 @@
       async function(event) {
 
         if (
-          event.origin !==
-          "https://script.google.com"
-        ) {
-          return;
-        }
-
+  event.source !==
+  document.getElementById("respuesta").contentWindow
+) {
+  return;
+}
 
         const respuesta = event.data;
 
