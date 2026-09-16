@@ -392,36 +392,82 @@ const botonNotificaciones =
 const estadoNotificaciones =
   document.getElementById("estadoNotificaciones");
 
-OneSignalDeferred.push(
-  function(OneSignal) {
+botonNotificaciones.addEventListener(
+  "click",
+  function() {
 
-    console.log(
-      "SIGAP OneSignal cargado"
+    botonNotificaciones.disabled = true;
+    botonNotificaciones.textContent = "ACTIVANDO...";
+    estadoNotificaciones.textContent =
+      "Solicitando permiso para recibir notificaciones...";
+
+    OneSignalDeferred.push(
+      async function(OneSignal) {
+
+        try {
+
+          // Solicitar explícitamente el permiso de Android/Chrome
+          await OneSignal.Notifications.requestPermission();
+
+          const permiso =
+            OneSignal.Notifications.permission;
+
+          const subscriptionId =
+            OneSignal.User.PushSubscription.id;
+
+          console.log(
+            "SIGAP - permiso OneSignal:",
+            permiso
+          );
+
+          console.log(
+            "SIGAP - Subscription ID:",
+            subscriptionId
+          );
+
+          if (
+            permiso === "granted" &&
+            subscriptionId
+          ) {
+
+            estadoNotificaciones.textContent =
+              "✅ Notificaciones activadas.";
+
+            botonNotificaciones.textContent =
+              "✅ NOTIFICACIONES ACTIVADAS";
+
+          } else {
+
+            estadoNotificaciones.textContent =
+              "⚠️ No se concedió el permiso para las notificaciones.";
+
+            botonNotificaciones.disabled = false;
+
+            botonNotificaciones.textContent =
+              "🔔 ACTIVAR NOTIFICACIONES";
+          }
+
+        } catch (error) {
+
+          console.error(
+            "SIGAP - error solicitando permiso:",
+            error
+          );
+
+          estadoNotificaciones.textContent =
+            "⚠️ No fue posible activar las notificaciones.";
+
+          botonNotificaciones.disabled = false;
+
+          botonNotificaciones.textContent =
+            "🔔 ACTIVAR NOTIFICACIONES";
+        }
+
+      }
     );
-
-    console.log(
-      "Push compatible:",
-      OneSignal.Notifications.isPushSupported()
-    );
-
-    console.log(
-      "Permiso navegador:",
-      OneSignal.Notifications.permission
-    );
-
-    console.log(
-      "OptedIn:",
-      OneSignal.User.PushSubscription.optedIn
-    );
-
-    console.log(
-      "Subscription ID:",
-      OneSignal.User.PushSubscription.id
-    );
-
   }
 );
-
+    
 botonNotificaciones.addEventListener(
   "click",
   function() {
