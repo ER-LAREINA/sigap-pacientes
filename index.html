@@ -407,8 +407,10 @@ botonNotificaciones.addEventListener(
 
     try {
 
-      const aceptado =
-        await window.OneSignal.Notifications.requestPermission();
+      await window.OneSignal.User.PushSubscription.optIn();
+
+const aceptado =
+  window.OneSignal.User.PushSubscription.optedIn;
 
       console.log(
         "SIGAP - permiso:",
