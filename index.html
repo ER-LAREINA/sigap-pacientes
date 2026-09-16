@@ -219,7 +219,52 @@
 
       </div>
 
+<!-- ACTIVAR NOTIFICACIONES -->
 
+<div
+  id="bloqueNotificaciones"
+  style="
+    margin-top:25px;
+    padding:18px;
+    background:#eef5fa;
+    border-radius:10px;
+    text-align:center;
+  "
+>
+
+  <strong
+    style="
+      display:block;
+      font-size:18px;
+      margin-bottom:12px;
+    "
+  >
+    🔔 Reciba el aviso cuando sea llamado
+  </strong>
+
+  <button
+    type="button"
+    id="botonNotificaciones"
+    style="
+      margin-top:5px;
+      background:#16803c;
+    "
+  >
+    🔔 ACTIVAR NOTIFICACIONES
+  </button>
+
+  <div
+    id="estadoNotificaciones"
+    style="
+      margin-top:10px;
+      font-size:14px;
+    "
+  >
+    Presione el botón para activar los avisos.
+  </div>
+
+</div>
+      
       <!-- FORMULARIO -->
 
       <form
@@ -341,7 +386,58 @@
 
 
   <script>
+const botonNotificaciones =
+  document.getElementById("botonNotificaciones");
 
+const estadoNotificaciones =
+  document.getElementById("estadoNotificaciones");
+
+
+botonNotificaciones.addEventListener(
+  "click",
+  async function() {
+
+    botonNotificaciones.disabled = true;
+
+    botonNotificaciones.textContent =
+      "ACTIVANDO...";
+
+    try {
+
+      await OneSignalDeferred.push(
+        async function(OneSignal) {
+
+          await OneSignal.Notifications.requestPermission();
+
+        }
+      );
+
+      estadoNotificaciones.textContent =
+        "✅ Notificaciones activadas.";
+
+      botonNotificaciones.textContent =
+        "✅ NOTIFICACIONES ACTIVADAS";
+
+    } catch (error) {
+
+      console.error(
+        "Error solicitando permiso:",
+        error
+      );
+
+      botonNotificaciones.disabled = false;
+
+      botonNotificaciones.textContent =
+        "🔔 ACTIVAR NOTIFICACIONES";
+
+      estadoNotificaciones.textContent =
+        "No fue posible activar las notificaciones.";
+
+    }
+
+  }
+);
+    
     const formulario =
       document.getElementById("formulario");
 
@@ -405,9 +501,6 @@
         await OneSignal.login(
           respuesta.uid
         );
-
-        // Activar la suscripción de notificaciones
-        await OneSignal.User.PushSubscription.optIn();
 
         console.log(
           "SIGAP: paciente vinculado y suscripción activada."
