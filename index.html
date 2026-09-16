@@ -395,7 +395,7 @@ const estadoNotificaciones =
 
 botonNotificaciones.addEventListener(
   "click",
-  function() {
+  async function() {
 
     botonNotificaciones.disabled = true;
 
@@ -403,66 +403,54 @@ botonNotificaciones.addEventListener(
       "ACTIVANDO...";
 
     estadoNotificaciones.textContent =
-      "Solicitando permiso para enviar avisos...";
+      "Solicitando permiso...";
 
-    OneSignalDeferred.push(
-      async function(OneSignal) {
+    try {
 
-        try {
+      const aceptado =
+        await window.OneSignal.Notifications.requestPermission();
 
-          await OneSignal.Notifications.requestPermission();
+      console.log(
+        "SIGAP - permiso:",
+        aceptado
+      );
 
-          console.log(
-            "SIGAP: permiso de notificaciones solicitado."
-          );
+      if (aceptado) {
 
-          const permiso =
-            OneSignal.Notifications.permission;
+        estadoNotificaciones.textContent =
+          "✅ Notificaciones activadas.";
 
-          console.log(
-            "SIGAP: estado del permiso:",
-            permiso
-          );
+        botonNotificaciones.textContent =
+          "✅ NOTIFICACIONES ACTIVADAS";
 
-          if (permiso === true) {
+      } else {
 
-            estadoNotificaciones.textContent =
-              "✅ Notificaciones activadas.";
+        estadoNotificaciones.textContent =
+          "⚠️ Debe permitir las notificaciones.";
 
-            botonNotificaciones.textContent =
-              "✅ NOTIFICACIONES ACTIVADAS";
+        botonNotificaciones.disabled = false;
 
-          } else {
-
-            estadoNotificaciones.textContent =
-              "⚠️ Debe permitir las notificaciones en Chrome.";
-
-            botonNotificaciones.disabled = false;
-
-            botonNotificaciones.textContent =
-              "🔔 ACTIVAR NOTIFICACIONES";
-
-          }
-
-        } catch (error) {
-
-          console.error(
-            "SIGAP: error activando notificaciones:",
-            error
-          );
-
-          estadoNotificaciones.textContent =
-            "⚠️ No fue posible activar las notificaciones.";
-
-          botonNotificaciones.disabled = false;
-
-          botonNotificaciones.textContent =
-            "🔔 ACTIVAR NOTIFICACIONES";
-
-        }
+        botonNotificaciones.textContent =
+          "🔔 ACTIVAR NOTIFICACIONES";
 
       }
-    );
+
+    } catch (error) {
+
+      console.error(
+        "SIGAP - error:",
+        error
+      );
+
+      estadoNotificaciones.textContent =
+        "⚠️ No fue posible activar las notificaciones.";
+
+      botonNotificaciones.disabled = false;
+
+      botonNotificaciones.textContent =
+        "🔔 ACTIVAR NOTIFICACIONES";
+
+    }
 
   }
 );
