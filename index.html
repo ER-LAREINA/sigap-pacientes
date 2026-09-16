@@ -399,58 +399,68 @@ botonNotificaciones.addEventListener(
     botonNotificaciones.disabled = true;
     botonNotificaciones.textContent = "ACTIVANDO...";
     estadoNotificaciones.textContent =
-      "Solicitando permiso para recibir notificaciones...";
+      "Activando las notificaciones...";
 
     OneSignalDeferred.push(
       async function(OneSignal) {
 
         try {
 
-          // Solicitar explícitamente el permiso de Android/Chrome
+          // Escuchar hasta que OneSignal cree la suscripción
+          const listener = function(event) {
+
+            console.log(
+              "SIGAP - cambio de suscripción:",
+              event.current
+            );
+
+            if (
+              event.current &&
+              event.current.id &&
+              event.current.token &&
+              event.current.optedIn
+            ) {
+
+              estadoNotificaciones.textContent =
+                "✅ Notificaciones activadas.";
+
+              botonNotificaciones.textContent =
+                "✅ NOTIFICACIONES ACTIVADAS";
+
+              OneSignal.User.PushSubscription
+                .removeEventListener(
+                  "change",
+                  listener
+                );
+            }
+          };
+
+          OneSignal.User.PushSubscription
+            .addEventListener(
+              "change",
+              listener
+            );
+
+          // Solicitar permiso del navegador
           await OneSignal.Notifications.requestPermission();
 
-          const permiso =
-            OneSignal.Notifications.permission;
-
-          const subscriptionId =
-            OneSignal.User.PushSubscription.id;
+          // Activar la suscripción
+          OneSignal.User.PushSubscription.optIn();
 
           console.log(
-            "SIGAP - permiso OneSignal:",
-            permiso
+            "SIGAP - permiso:",
+            OneSignal.Notifications.permission
           );
 
           console.log(
-            "SIGAP - Subscription ID:",
-            subscriptionId
+            "SIGAP - subscription:",
+            OneSignal.User.PushSubscription.id
           );
-
-          if (
-            permiso === "granted" &&
-            subscriptionId
-          ) {
-
-            estadoNotificaciones.textContent =
-              "✅ Notificaciones activadas.";
-
-            botonNotificaciones.textContent =
-              "✅ NOTIFICACIONES ACTIVADAS";
-
-          } else {
-
-            estadoNotificaciones.textContent =
-              "⚠️ No se concedió el permiso para las notificaciones.";
-
-            botonNotificaciones.disabled = false;
-
-            botonNotificaciones.textContent =
-              "🔔 ACTIVAR NOTIFICACIONES";
-          }
 
         } catch (error) {
 
           console.error(
-            "SIGAP - error solicitando permiso:",
+            "SIGAP - error OneSignal:",
             error
           );
 
