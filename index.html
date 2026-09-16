@@ -392,6 +392,35 @@ const botonNotificaciones =
 const estadoNotificaciones =
   document.getElementById("estadoNotificaciones");
 
+OneSignalDeferred.push(
+  function(OneSignal) {
+
+    console.log(
+      "SIGAP OneSignal cargado"
+    );
+
+    console.log(
+      "Push compatible:",
+      OneSignal.Notifications.isPushSupported()
+    );
+
+    console.log(
+      "Permiso navegador:",
+      OneSignal.Notifications.permission
+    );
+
+    console.log(
+      "OptedIn:",
+      OneSignal.User.PushSubscription.optedIn
+    );
+
+    console.log(
+      "Subscription ID:",
+      OneSignal.User.PushSubscription.id
+    );
+
+  }
+);
 
 botonNotificaciones.addEventListener(
   "click",
