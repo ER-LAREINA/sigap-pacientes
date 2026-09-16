@@ -396,24 +396,43 @@
 
         try {
 
-          OneSignalDeferred.push(
-            async function(OneSignal) {
+  OneSignalDeferred.push(
+    async function(OneSignal) {
 
-              await OneSignal.login(
-                respuesta.uid
-              );
+      try {
 
-            }
-          );
+        // Vincular el paciente con su UUID
+        await OneSignal.login(
+          respuesta.uid
+        );
 
-        } catch (error) {
+        // Activar la suscripción de notificaciones
+        await OneSignal.User.PushSubscription.optIn();
 
-          console.error(
-            "Error vinculando OneSignal:",
-            error
-          );
+        console.log(
+          "SIGAP: paciente vinculado y suscripción activada."
+        );
 
-        }
+      } catch (error) {
+
+        console.error(
+          "SIGAP: error activando OneSignal:",
+          error
+        );
+
+      }
+
+    }
+  );
+
+} catch (error) {
+
+  console.error(
+    "Error vinculando OneSignal:",
+    error
+  );
+
+}
 
 
         // Mostrar número de turno
