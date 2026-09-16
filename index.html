@@ -395,22 +395,77 @@ const estadoNotificaciones =
 
 botonNotificaciones.addEventListener(
   "click",
-  async function() {
+  function() {
 
     botonNotificaciones.disabled = true;
 
     botonNotificaciones.textContent =
       "ACTIVANDO...";
 
-    try {
+    estadoNotificaciones.textContent =
+      "Solicitando permiso para enviar avisos...";
 
-      await OneSignalDeferred.push(
-        async function(OneSignal) {
+    OneSignalDeferred.push(
+      async function(OneSignal) {
+
+        try {
 
           await OneSignal.Notifications.requestPermission();
 
+          console.log(
+            "SIGAP: permiso de notificaciones solicitado."
+          );
+
+          const permiso =
+            OneSignal.Notifications.permission;
+
+          console.log(
+            "SIGAP: estado del permiso:",
+            permiso
+          );
+
+          if (permiso === true) {
+
+            estadoNotificaciones.textContent =
+              "✅ Notificaciones activadas.";
+
+            botonNotificaciones.textContent =
+              "✅ NOTIFICACIONES ACTIVADAS";
+
+          } else {
+
+            estadoNotificaciones.textContent =
+              "⚠️ Debe permitir las notificaciones en Chrome.";
+
+            botonNotificaciones.disabled = false;
+
+            botonNotificaciones.textContent =
+              "🔔 ACTIVAR NOTIFICACIONES";
+
+          }
+
+        } catch (error) {
+
+          console.error(
+            "SIGAP: error activando notificaciones:",
+            error
+          );
+
+          estadoNotificaciones.textContent =
+            "⚠️ No fue posible activar las notificaciones.";
+
+          botonNotificaciones.disabled = false;
+
+          botonNotificaciones.textContent =
+            "🔔 ACTIVAR NOTIFICACIONES";
+
         }
-      );
+
+      }
+    );
+
+  }
+);
 
       estadoNotificaciones.textContent =
         "✅ Notificaciones activadas.";
