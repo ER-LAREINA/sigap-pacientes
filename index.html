@@ -454,32 +454,6 @@ botonNotificaciones.addEventListener(
 
   }
 );
-
-      estadoNotificaciones.textContent =
-        "✅ Notificaciones activadas.";
-
-      botonNotificaciones.textContent =
-        "✅ NOTIFICACIONES ACTIVADAS";
-
-    } catch (error) {
-
-      console.error(
-        "Error solicitando permiso:",
-        error
-      );
-
-      botonNotificaciones.disabled = false;
-
-      botonNotificaciones.textContent =
-        "🔔 ACTIVAR NOTIFICACIONES";
-
-      estadoNotificaciones.textContent =
-        "No fue posible activar las notificaciones.";
-
-    }
-
-  }
-);
     
     const formulario =
       document.getElementById("formulario");
