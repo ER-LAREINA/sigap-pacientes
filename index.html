@@ -395,7 +395,7 @@ const estadoNotificaciones =
 
 botonNotificaciones.addEventListener(
   "click",
-  async function() {
+  function() {
 
     botonNotificaciones.disabled = true;
 
@@ -403,56 +403,69 @@ botonNotificaciones.addEventListener(
       "ACTIVANDO...";
 
     estadoNotificaciones.textContent =
-      "Solicitando permiso...";
+      "Activando las notificaciones...";
 
-    try {
+    OneSignalDeferred.push(
+      async function(OneSignal) {
 
-      await window.OneSignal.User.PushSubscription.optIn();
+        try {
 
-const aceptado =
-  window.OneSignal.User.PushSubscription.optedIn;
+          OneSignal.User.PushSubscription.optIn();
 
-      console.log(
-        "SIGAP - permiso:",
-        aceptado
-      );
+          setTimeout(
+            function() {
 
-      if (aceptado) {
+              const activadas =
+                OneSignal.User.PushSubscription.optedIn;
 
-        estadoNotificaciones.textContent =
-          "✅ Notificaciones activadas.";
+              console.log(
+                "SIGAP - notificaciones:",
+                activadas
+              );
 
-        botonNotificaciones.textContent =
-          "✅ NOTIFICACIONES ACTIVADAS";
+              if (activadas) {
 
-      } else {
+                estadoNotificaciones.textContent =
+                  "✅ Notificaciones activadas.";
 
-        estadoNotificaciones.textContent =
-          "⚠️ Debe permitir las notificaciones.";
+                botonNotificaciones.textContent =
+                  "✅ NOTIFICACIONES ACTIVADAS";
 
-        botonNotificaciones.disabled = false;
+              } else {
 
-        botonNotificaciones.textContent =
-          "🔔 ACTIVAR NOTIFICACIONES";
+                estadoNotificaciones.textContent =
+                  "⚠️ No se pudo activar la suscripción.";
+
+                botonNotificaciones.disabled = false;
+
+                botonNotificaciones.textContent =
+                  "🔔 ACTIVAR NOTIFICACIONES";
+
+              }
+
+            },
+            1500
+          );
+
+        } catch (error) {
+
+          console.error(
+            "SIGAP - error OneSignal:",
+            error
+          );
+
+          estadoNotificaciones.textContent =
+            "⚠️ No fue posible activar las notificaciones.";
+
+          botonNotificaciones.disabled = false;
+
+          botonNotificaciones.textContent =
+            "🔔 ACTIVAR NOTIFICACIONES";
+
+        }
 
       }
-
-    } catch (error) {
-
-      console.error(
-        "SIGAP - error:",
-        error
-      );
-
-      estadoNotificaciones.textContent =
-        "⚠️ No fue posible activar las notificaciones.";
-
-      botonNotificaciones.disabled = false;
-
-      botonNotificaciones.textContent =
-        "🔔 ACTIVAR NOTIFICACIONES";
-
-    }
+    );
 
   }
 );
