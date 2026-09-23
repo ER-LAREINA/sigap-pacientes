@@ -172,7 +172,8 @@
 
 <body>
 
-
+<div id="avisoIphone" style="display:none;"></div>
+  
   <div class="encabezado">
 
     <h1>🛡️ Enfermería Regimentaria</h1>
@@ -701,6 +702,18 @@ botonNotificaciones.addEventListener(
       }
     );
 
+const esAppleMovil =
+  /iPhone|iPad|iPod/.test(navigator.userAgent) ||
+  (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+const esAppInstalada =
+  window.matchMedia("(display-mode: standalone)").matches ||
+  window.navigator.standalone === true;
+
+if (esAppleMovil && !esAppInstalada) {
+  document.getElementById("avisoIphone").style.display = "block";
+}
+    
   </script>
 
 
