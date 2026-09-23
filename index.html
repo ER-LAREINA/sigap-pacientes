@@ -164,6 +164,54 @@
 
     });
 
+    OneSignalDeferred.push(async function(OneSignal) {
+
+  try {
+
+    const soportado =
+      await OneSignal.Notifications.isPushSupported();
+
+    const permiso =
+      OneSignal.Notifications.permission;
+
+    const suscrito =
+      OneSignal.User.PushSubscription.optedIn;
+
+    const subscriptionId =
+      OneSignal.User.PushSubscription.id;
+
+    const diagnostico =
+      document.createElement("div");
+
+    diagnostico.style.cssText =
+      "margin:15px;padding:15px;border:2px solid #333;background:#f5f5f5;font-size:14px;";
+
+    diagnostico.innerHTML =
+      "<strong>DIAGNÓSTICO ONESIGNAL</strong><br><br>" +
+      "Push soportado: " + soportado + "<br>" +
+      "Permiso navegador: " + permiso + "<br>" +
+      "OneSignal Opted In: " + suscrito + "<br>" +
+      "Subscription ID: " + (subscriptionId || "NULL");
+
+    document.body.appendChild(diagnostico);
+
+    console.log("SIGAP DIAGNÓSTICO");
+    console.log("Push soportado:", soportado);
+    console.log("Permiso navegador:", permiso);
+    console.log("OneSignal Opted In:", suscrito);
+    console.log("Subscription ID:", subscriptionId);
+
+  } catch (error) {
+
+    console.error(
+      "Error diagnóstico OneSignal:",
+      error
+    );
+
+  }
+
+});
+
   </script>
 
 
